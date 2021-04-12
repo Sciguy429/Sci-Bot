@@ -14,6 +14,9 @@ HydrusNuralModelPath = "./model-resnet_custom_v5.h5.e40"
 #Hydrus nural model tag list location
 HydrusNuralModelTags = "tags.txt"
 
+#Temp folder
+MediaTempFolder = "./sc-temp/"
+
 #API token (set to input() as a debugging mesure)
 TelegramAPIToken = input("Enter bot token: ")
 
