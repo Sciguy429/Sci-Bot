@@ -29,7 +29,6 @@ def start(update: Update, _: CallbackContext) -> None:
         reply_markup=ForceReply(selective=True),
     )
 
-
 def help_command(update: Update, _: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Help!')
@@ -40,6 +39,13 @@ def main() -> None:
     
     #Grab dispatcher as well
     telegramDispatcher = telegramUpdater.dispatcher
+    
+    telegramDispatcher.add_handler(CommandHandler("start", start))
+    telegramDispatcher.add_handler(CommandHandler("help", help_command))
+    
+    telegramUpdater.start_polling()
+    
+    telegramUpdater.idle()
 
 if __name__ == '__main__':
     main()
