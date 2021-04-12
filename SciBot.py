@@ -29,7 +29,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 ###- Bot Commands -###
 
 #SciBot Command
-def sciBotCommand(update: Update, _: CallbackContext) -> None:
+def sciBotCommand(update: Update, context: CallbackContext) -> None:
     #Check for a reply
     if (not update.message.reply_to_message):
         update.message.reply_text("No reply detected!")
@@ -39,13 +39,15 @@ def sciBotCommand(update: Update, _: CallbackContext) -> None:
     #Make sure reply contains an image
     if (not update.message.reply_to_message.photo):
         update.message.reply_text("No pictures detected!")
-        logging.info("FAILED CHECK: No media in chat %d, at message %d, reply %d)", update.message.chat_id, update.message.message_id, update.message.reply_to_message.message_id)
+        logging.info("FAILED CHECK: No valid media in chat %d, at message %d, reply %d)", update.message.chat_id, update.message.message_id, update.message.reply_to_message.message_id)
         return
     
     #Log sucess
     logging.info("PASSED CHECK: Valid post in chat %d, at message %d, reply %d", update.message.chat_id, update.message.message_id, update.message.reply_to_message.message_id)
     
-    update.message.reply_text("Reply Detected! Orignal image info: " + update.message.reply_to_message.photo[0].file_id)
+    #Create new message
+    postReply = update.message.reply_to_message.reply_text("Processing image...")
+    logging.info("POST TRACKING: Created new tracked message in chat %d, at message %d, for reply %d", postReply.chat_id, postReply.message_id, update.message.reply_to_message.message_id)
 
 def main() -> None:
     #Setup updater
