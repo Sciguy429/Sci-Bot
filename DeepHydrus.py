@@ -1,3 +1,3 @@
-#Compact reimplementaion of DeepDanbooru with added features
+#Compact reimplementaion of DeepDanbooru's evaluator with added features
 #By Sciguy429
 
