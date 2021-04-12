@@ -21,17 +21,12 @@ TelegramAPIToken = input("Enter bot token: ")
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 ###- Bot Commands -###
-def start(update: Update, _: CallbackContext) -> None:
-    """Send a message when the command /start is issued."""
-    user = update.effective_user
-    update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
-        reply_markup=ForceReply(selective=True),
-    )
 
-def help_command(update: Update, _: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+#SciBot Command
+def sciBotCommand(update: Update, _: CallbackContext) -> None:
+    update.message.reply_text("Main command recieved!")
+    if update.message.reply_to_message:
+        update.message.reply_text("Reply Detected! Orignal message text: " + update.message.reply_to_message.text)
 
 def main() -> None:
     #Setup updater
@@ -40,8 +35,7 @@ def main() -> None:
     #Grab dispatcher as well
     telegramDispatcher = telegramUpdater.dispatcher
     
-    telegramDispatcher.add_handler(CommandHandler("start", start))
-    telegramDispatcher.add_handler(CommandHandler("help", help_command))
+    telegramDispatcher.add_handler(CommandHandler("SciBot", sciBotCommand))
     
     telegramUpdater.start_polling()
     
