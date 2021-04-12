@@ -14,19 +14,23 @@ HydrusNuralModelPath = "./model-resnet_custom_v5.h5.e40"
 #Hydrus nural model tag list location
 HydrusNuralModelTags = "tags.txt"
 
-#API token (set to input() as a debuggin mesure)
+#API token (set to input() as a debugging mesure)
 TelegramAPIToken = input("Enter bot token: ")
 
 #Logging config
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+###- Arg parse config -###
+#TODO
 
 ###- Bot Commands -###
 
 #SciBot Command
 def sciBotCommand(update: Update, _: CallbackContext) -> None:
     update.message.reply_text("Main command recieved!")
+    print(update.message)
     if update.message.reply_to_message:
-        update.message.reply_text("Reply Detected! Orignal message text: " + update.message.reply_to_message.text)
+        update.message.reply_text("Reply Detected! Orignal image info: " + update.message.reply_to_message.photo[0].file_id)
 
 def main() -> None:
     #Setup updater
@@ -35,7 +39,8 @@ def main() -> None:
     #Grab dispatcher as well
     telegramDispatcher = telegramUpdater.dispatcher
     
-    telegramDispatcher.add_handler(CommandHandler("SciBot", sciBotCommand))
+    telegramDispatcher.add_handler(MessageHandler(Filters.regex("(?i)^(/SciBot)"), sciBotCommand))
+    #telegramDispatcher.add_handler(MessageHandler(Filters.all, sciBotCommand))
     
     telegramUpdater.start_polling()
     
