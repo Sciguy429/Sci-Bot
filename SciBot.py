@@ -93,7 +93,6 @@ def main() -> None:
     telegramDispatcher = telegramUpdater.dispatcher
     
     telegramDispatcher.add_handler(MessageHandler(Filters.regex("(?i)^(/SciBot)"), sciBotCommand))
-    #telegramDispatcher.add_handler(MessageHandler(Filters.all, sciBotCommand))
     
     telegramUpdater.start_polling()
     
