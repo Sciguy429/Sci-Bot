@@ -27,10 +27,22 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 #SciBot Command
 def sciBotCommand(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text("Main command recieved!")
-    print(update.message)
-    if update.message.reply_to_message:
-        update.message.reply_text("Reply Detected! Orignal image info: " + update.message.reply_to_message.photo[0].file_id)
+    #Check for a reply
+    if (not update.message.reply_to_message):
+        update.message.reply_text("No reply detected!")
+        logging.info("FAILED CHECK: No reply in chat %d, at message %d)", update.message.chat_id, update.message.message_id)
+        return
+    
+    #Make sure reply contains an image
+    if (not update.message.reply_to_message.photo):
+        update.message.reply_text("No pictures detected!")
+        logging.info("FAILED CHECK: No media in chat %d, at message %d, reply %d)", update.message.chat_id, update.message.message_id, update.message.reply_to_message.message_id)
+        return
+    
+    #Log sucess
+    logging.info("PASSED CHECK: Valid post in chat %d, at message %d, reply %d", update.message.chat_id, update.message.message_id, update.message.reply_to_message.message_id)
+    
+    update.message.reply_text("Reply Detected! Orignal image info: " + update.message.reply_to_message.photo[0].file_id)
 
 def main() -> None:
     #Setup updater
