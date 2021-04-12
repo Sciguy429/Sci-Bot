@@ -2,7 +2,11 @@
 #By Sciguy429
 
 #Imports
+import DeepHydrus
+
 import logging
+import pathlib
+import os
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
@@ -22,6 +26,9 @@ TelegramAPIToken = input("Enter bot token: ")
 
 #Logging config
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+#Gloabal DeepHydrus object
+deepHydrus = DeepHydrus.DeepHydrus(HydrusNuralModelPath, HydrusNuralModelTags, 512, 512)
 
 ###- Arg parse config -###
 #TODO
@@ -48,6 +55,35 @@ def sciBotCommand(update: Update, context: CallbackContext) -> None:
     #Create new message
     postReply = update.message.reply_to_message.reply_text("Processing image...")
     logging.info("POST TRACKING: Created new tracked message in chat %d, at message %d, for reply %d", postReply.chat_id, postReply.message_id, update.message.reply_to_message.message_id)
+    
+    #Download image
+    photo = update.message.reply_to_message.photo[-1]
+    photoFile = photo.get_file()
+    
+    photoFileExt = pathlib.Path(photoFile.file_path).suffix
+    tempPhotoPath = MediaTempFolder + photo.file_id + photoFileExt
+    
+    photoFile.download(custom_path=tempPhotoPath)
+    logging.info("PHOTO PROCESSING: Downloaded photo ID: %s", photo.file_id)
+    
+    #Process image
+    imageTags = deepHydrus.evaluate(tempPhotoPath, 0.4)
+    logging.info("PHOTO PROCESSING: Processed photo ID: %s", photo.file_id)
+    
+    #Update post
+    if (imageTags):
+        newText = "Tags found:\n\n"
+        for tag, certainty in imageTags.items():
+            newText = newText + tag + ": " + str(round((certainty * 100), 4)) + "%, "
+    else:
+        newText = "No tags found..."
+        
+    postReply.edit_text(newText)
+    logging.info("POST TRACKING: Updated tracked message in chat %d, at message %d, for reply %d", postReply.chat_id, postReply.message_id, update.message.reply_to_message.message_id)
+    
+    #Clean up file
+    os.remove(tempPhotoPath)
+    logging.info("PHOTO PROCESSING: Deleted photo ID: %s", photo.file_id)
 
 def main() -> None:
     #Setup updater
