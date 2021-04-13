@@ -112,6 +112,7 @@ def sciBotCommand(update: Update, context: CallbackContext) -> None:
         newText = "Tags found:\n\n"
         for tag, certainty in imageTags.items():
             newText = newText + tag + ": " + str(round((certainty * 100), ModelOutputAcuracy)) + "%, "
+        newText = newText[:-2] + "."
     else:
         newText = "No tags found..."
         
@@ -156,6 +157,7 @@ def dmImage(update: Update, _: CallbackContext) -> None:
         newText = "Tags found:\n\n"
         for tag, certainty in imageTags.items():
             newText = newText + tag + ": " + str(round((certainty * 100), ModelOutputAcuracy)) + "%, "
+        newText = newText[:-2] + "."
     else:
         newText = "No tags found..."
         
