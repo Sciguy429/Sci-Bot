@@ -63,9 +63,11 @@ def start(update: Update, context: CallbackContext) -> None:
     if (update.message.chat.type == update.message.chat.PRIVATE):
         #We are in a dm
         update.message.reply_text(introString + "\n\n" + dmString)
+        logging.info("START: Recieved start command in dm id: %d", update.message.chat_id)
     else:
         #We are in a group of some kind
         update.message.reply_text(introString + "\n\n" + groupString)
+        logging.info("START: Recieved start command in group id: %d", update.message.chat_id)
 
 #SciBot Command
 def sciBotCommand(update: Update, context: CallbackContext) -> None:
