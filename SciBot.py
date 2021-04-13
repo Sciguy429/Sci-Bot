@@ -62,10 +62,10 @@ def start(update: Update, context: CallbackContext) -> None:
     #Print differing replys depending on wether we are in a server or dm
     if (update.message.chat.type == update.message.chat.PRIVATE):
         #We are in a dm
-        update.message.reply_text()
+        update.message.reply_text(introString + "\n\n" + dmString)
     else:
         #We are in a group of some kind
-        update.message.reply_text("Group detected")
+        update.message.reply_text(introString + "\n\n" + groupString)
 
 #SciBot Command
 def sciBotCommand(update: Update, context: CallbackContext) -> None:
