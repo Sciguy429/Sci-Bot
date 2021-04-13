@@ -87,7 +87,7 @@ def sciBotCommand(update: Update, context: CallbackContext) -> None:
     logging.info("PASSED CHECK: Valid post in chat %d, at message %d, reply %d", update.message.chat_id, update.message.message_id, update.message.reply_to_message.message_id)
     
     #Create new message
-    postReply = update.message.reply_to_message.reply_text("Processing image...")
+    postReply = update.message.reply_to_message.reply_text("Processing image...", quote=True)
     logging.info("POST TRACKING: Created new tracked message in chat %d, at message %d, for reply %d", postReply.chat_id, postReply.message_id, update.message.reply_to_message.message_id)
     
     #Download image
@@ -121,7 +121,47 @@ def sciBotCommand(update: Update, context: CallbackContext) -> None:
 
 #Image send in DM
 def dmImage(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text(update.message.text)
+    #Make sure we were sent a picture
+    if (not update.message.photo):
+        update.message.reply_text("No pictures detected!")
+        logging.info("FAILED CHECK (DM): No valid media in chat %d, at message %d)", update.message.chat_id, update.message.message_id)
+        return
+    
+    #Log sucess
+    logging.info("PASSED CHECK (DM): Valid post in chat %d, at message %d", update.message.chat_id, update.message.message_id)
+    
+    #Create new message
+    postReply = update.message.reply_text("Processing image...", quote=True)
+    logging.info("POST TRACKING (DM): Created new tracked message in chat %d, at message %d", postReply.chat_id, postReply.message_id)
+    
+    #Download image
+    photo = update.message.photo[-1]
+    photoFile = photo.get_file()
+    
+    photoFileExt = pathlib.Path(photoFile.file_path).suffix
+    tempPhotoPath = MediaTempFolder + photo.file_id + photoFileExt
+    
+    photoFile.download(custom_path=tempPhotoPath)
+    logging.info("PHOTO PROCESSING (DM): Downloaded photo ID: %s", photo.file_id)
+    
+    #Process image
+    imageTags = deepHydrus.evaluate(tempPhotoPath, 0.4)
+    logging.info("PHOTO PROCESSING (DM): Processed photo ID: %s", photo.file_id)
+    
+    #Update post
+    if (imageTags):
+        newText = "Tags found:\n\n"
+        for tag, certainty in imageTags.items():
+            newText = newText + tag + ": " + str(round((certainty * 100), 4)) + "%, "
+    else:
+        newText = "No tags found..."
+        
+    postReply.edit_text(newText)
+    logging.info("POST TRACKING (DM): Updated tracked message in chat %d, at message %d", postReply.chat_id, postReply.message_id)
+    
+    #Clean up file
+    os.remove(tempPhotoPath)
+    logging.info("PHOTO PROCESSING (DM): Deleted photo ID: %s", photo.file_id)
 
 def main() -> None:
     #Setup updater
