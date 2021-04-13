@@ -22,6 +22,9 @@ HydrusNuralModelTags = "tags.txt"
 HydrusNuralModelHeight = 512
 HydrusNuralModelWidth = 512
 
+#Acuracy
+ModelOutputAcuracy = 2
+
 #Temp folder
 MediaTempFolder = "./sc-temp/"
 
@@ -108,7 +111,7 @@ def sciBotCommand(update: Update, context: CallbackContext) -> None:
     if (imageTags):
         newText = "Tags found:\n\n"
         for tag, certainty in imageTags.items():
-            newText = newText + tag + ": " + str(round((certainty * 100), 4)) + "%, "
+            newText = newText + tag + ": " + str(round((certainty * 100), ModelOutputAcuracy)) + "%, "
     else:
         newText = "No tags found..."
         
@@ -152,7 +155,7 @@ def dmImage(update: Update, _: CallbackContext) -> None:
     if (imageTags):
         newText = "Tags found:\n\n"
         for tag, certainty in imageTags.items():
-            newText = newText + tag + ": " + str(round((certainty * 100), 4)) + "%, "
+            newText = newText + tag + ": " + str(round((certainty * 100), ModelOutputAcuracy)) + "%, "
     else:
         newText = "No tags found..."
         
