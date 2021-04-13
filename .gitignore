@@ -2,3 +2,4 @@ model-resnet_custom_v5.h5.e40
 tags.txt
 sc-temp/*
 sc-temp/
+__pycache__/
