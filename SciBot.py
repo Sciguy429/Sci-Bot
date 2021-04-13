@@ -41,10 +41,28 @@ deepHydrus = DeepHydrus.DeepHydrus(HydrusNuralModelPath, HydrusNuralModelTags, H
 
 #Start command
 def start(update: Update, context: CallbackContext) -> None:
+    #Intro string
+    introString = "Hello!\n\nI am a bot desinged to tag images useing an AI neural network!"\
+                  " This process is not perfectly acreate, nor fast, but it is able to come up" \
+                  " with interesting results most of the time. The AI was trained via aroud 60,000"\
+                  " pre-tagged images from a self made Hydrus Database and as such is biased twords"\
+                  " the things I trained it with. It can, and will, struggle with things it hasn't"\
+                  " seen before. Futhermore the AI has the tendency to slap certian tags on everything"\
+                  " you give it. These are all incorrect, the tags themselfs are either too broad for"\
+                  " the AI to properly figure out, or so common that their simply is no pattern to them."
+    
+    #Dm String
+    dmString =    "I have deteced this is a dm. Please just send any images you would like me"\
+                  " to tag in this chat. I will not respond to dirrect commands."
+    
+    #Group string
+    groupString = "I have detected this is a group of some kind. Please reply to any image you"\
+                  " would like me to tag with '/SciBot'."
+    
     #Print differing replys depending on wether we are in a server or dm
     if (update.message.chat.type == update.message.chat.PRIVATE):
         #We are in a dm
-        update.message.reply_text("DM detected!")
+        update.message.reply_text()
     else:
         #We are in a group of some kind
         update.message.reply_text("Group detected")
