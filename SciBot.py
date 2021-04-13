@@ -53,7 +53,7 @@ def start(update: Update, context: CallbackContext) -> None:
     
     #Dm String
     dmString =    "I have deteced this is a dm. Please just send any images you would like me"\
-                  " to tag in this chat. I will not respond to dirrect commands."
+                  " to tag in this chat. I will not respond to direct commands."
     
     #Group string
     groupString = "I have detected this is a group of some kind. Please reply to any image you"\
