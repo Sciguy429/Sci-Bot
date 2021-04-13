@@ -18,6 +18,10 @@ HydrusNuralModelPath = "./model-resnet_custom_v5.h5.e40"
 #Hydrus nural model tag list location
 HydrusNuralModelTags = "tags.txt"
 
+#Model size
+HydrusNuralModelHeight = 512
+HydrusNuralModelWidth = 512
+
 #Temp folder
 MediaTempFolder = "./sc-temp/"
 
@@ -28,7 +32,7 @@ TelegramAPIToken = input("Enter bot token: ")
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 #Gloabal DeepHydrus object
-deepHydrus = DeepHydrus.DeepHydrus(HydrusNuralModelPath, HydrusNuralModelTags, 512, 512)
+deepHydrus = DeepHydrus.DeepHydrus(HydrusNuralModelPath, HydrusNuralModelTags, HydrusNuralModelHeight, HydrusNuralModelWidth)
 
 ###- Arg parse config -###
 #TODO
