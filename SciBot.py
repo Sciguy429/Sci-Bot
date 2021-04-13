@@ -39,6 +39,16 @@ deepHydrus = DeepHydrus.DeepHydrus(HydrusNuralModelPath, HydrusNuralModelTags, H
 
 ###- Bot Commands -###
 
+#Start command
+def start(update: Update, context: CallbackContext) -> None:
+    #Print differing replys depending on wether we are in a server or dm
+    if (update.message.chat.type == update.message.chat.PRIVATE):
+        #We are in a dm
+        update.message.reply_text("DM detected!")
+    else:
+        #We are in a group of some kind
+        update.message.reply_text("Group detected")
+
 #SciBot Command
 def sciBotCommand(update: Update, context: CallbackContext) -> None:
     #Check for a reply
@@ -89,6 +99,10 @@ def sciBotCommand(update: Update, context: CallbackContext) -> None:
     os.remove(tempPhotoPath)
     logging.info("PHOTO PROCESSING: Deleted photo ID: %s", photo.file_id)
 
+#Image send in DM
+def dmImage(update: Update, _: CallbackContext) -> None:
+    update.message.reply_text(update.message.text)
+
 def main() -> None:
     #Setup updater
     telegramUpdater = Updater(TelegramAPIToken)
@@ -96,7 +110,14 @@ def main() -> None:
     #Grab dispatcher as well
     telegramDispatcher = telegramUpdater.dispatcher
     
+    #Start command handeler
+    telegramDispatcher.add_handler(CommandHandler("start", start))
+    
+    #Main command handeler
     telegramDispatcher.add_handler(MessageHandler(Filters.regex("(?i)^(/SciBot)"), sciBotCommand))
+    
+    #Dm handeler
+    telegramDispatcher.add_handler(MessageHandler(Filters.chat_type.private, dmImage))
     
     telegramUpdater.start_polling()
     
